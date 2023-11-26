@@ -10,14 +10,16 @@ public class DBConnect {
     public static String password = "root";
     public static String driver = "com.mysql.jdbc.Driver";
 
-    public static void getConnection()
+    public static Connection getConnection()
     {
         try {
             Class.forName(driver);
             Connection conn = DriverManager.getConnection(url, user, password);
             System.out.println("connection successful");
+            return conn;
         } catch (Exception e) {
             System.out.println("Class not found " + e);
+            return null;
         }
     }
 }
