@@ -21,35 +21,41 @@ public class LoginServlet extends HttpServlet {
 
         String id=req.getParameter("userID");
         String p=req.getParameter("password");
+        String user_type = "";
+        String user_code = "";
         try{
             Connection connection = DBConnect.getConnection();
             Statement statement = connection.createStatement();
 
-            String query ="Select user_name from users;";
+            String query ="Select user_name,user_code from users;";
 
 
             ResultSet resultSet = statement.executeQuery(query);
 
+
             while(resultSet.next())
             {
                 System.out.println("username: "+resultSet.getString("user_name"));
-
-                String user_code = resultSet.getString("user_code");
-
-                String query2 = "select user_type from users_types where user_code=" + user_code;
-                ResultSet resultSet1 = statement.executeQuery(query2);
-                while (resultSet1.next()){
-                    String user_type = resultSet1.getString("user_type");
-                    if(user_type.equals("admin")){
-                        resp.sendRedirect("dashboard.html");
-                    }
-                }
-
+                user_code = resultSet.getString("user_code");
             }
+
+            String query2= "select user_type from users_types where user_code="+user_code;
+            ResultSet resultSet1 = statement.executeQuery(query2);
+            while(resultSet1.next())
+            {
+                user_type = resultSet1.getString("user_type");
+            }
+            connection.close();
+
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
 
+
+        if(user_type.equalsIgnoreCase("admin")){
+            resp.sendRedirect("dashboard.html");
+        }
 
     }
 }
