@@ -18,6 +18,7 @@ public class DBConnect {
             System.out.println("connection successful");
             return conn;
         } catch (Exception e) {
+            System.out.println("Class not found " + e);
             return null;
         }
     }
