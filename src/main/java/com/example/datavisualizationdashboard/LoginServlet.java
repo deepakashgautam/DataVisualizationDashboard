@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
@@ -31,7 +32,19 @@ public class LoginServlet extends HttpServlet {
 
             while(resultSet.next())
             {
-                System.out.println("username "+resultSet.getString("user_name"));
+                System.out.println("username: "+resultSet.getString("user_name"));
+
+                String user_code = resultSet.getString("user_code");
+
+                String query2 = "select user_type from users_types where user_code=" + user_code;
+                ResultSet resultSet1 = statement.executeQuery(query2);
+                while (resultSet1.next()){
+                    String user_type = resultSet1.getString("user_type");
+                    if(user_type.equals("admin")){
+                        resp.sendRedirect("dashboard.html");
+                    }
+                }
+
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
